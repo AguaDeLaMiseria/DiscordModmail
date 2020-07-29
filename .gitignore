@@ -1,0 +1,9 @@
+*.class
+*.log
+*.jar
+*.iml
+.idea/
+target/
+*.json
+*.db
+logs/
