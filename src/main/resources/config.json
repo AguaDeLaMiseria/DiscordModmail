@@ -1,0 +1,9 @@
+{
+  "token":"your.token.here",
+  "mailGuildID":"mailIDhere",
+  "mainGuildID":"mainIDhere",
+  "prefix":"!",
+  "status":"DM for contact",
+  "thread_category": "threads",
+  "logs_channel": "logs"
+}
