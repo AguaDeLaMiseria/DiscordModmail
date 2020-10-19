@@ -114,19 +114,36 @@ public abstract class DataHandler {
                 statement.setString(1, String.valueOf(id));
                 ResultSet resultSet = statement.executeQuery();
 
-                if (resultSet.next()) {
-                    do {
-                        String conclution = modmail.getLang().get("formatted_conclusion") + modmail.getLang().get("none");
-                        if (resultSet.getString("reason") != null)
-                            conclution = modmail.getLang().get("formatted_conclusion") + resultSet.getString("reason");
-                        channel.sendMessage("`" + modmail.getLang().get("thread") + " #" + resultSet.getInt("id") +
-                                "`\n" + modmail.getLang().get("formatted_date") + resultSet.getString("date") +
-                                "\n" + modmail.getLang().get("formatted_closed_by") + resultSet.getString("staff") +
-                                "\n" + conclution).queue();
-                    } while (resultSet.next());
-                } else {
-                    channel.sendMessage(modmail.getLang().get("history_not_found") + modmail.getLang().get("history_not_found")).queue();
+                if (!resultSet.next()){
+                    channel.sendMessage(modmail.getLang().get("history_not_found") + id).queue();
+                    statement.close();
+                    return;
                 }
+
+                short count = 4;
+                StringBuilder message = new StringBuilder();
+                do {
+                    String conclusion = modmail.getLang().get("formatted_conclusion") + modmail.getLang().get("none");
+                    if (resultSet.getString("reason") != null)
+                        conclusion = modmail.getLang().get("formatted_conclusion") + resultSet.getString("reason");
+
+                    String history = "`" + modmail.getLang().get("thread") + " #" + resultSet.getInt("id") +
+                                    "`\n" + modmail.getLang().get("formatted_date") + resultSet.getString("date") +
+                                    "\n" + modmail.getLang().get("formatted_closed_by") + resultSet.getString("staff") +
+                                    "\n" + conclusion + "\n";
+
+                    message.append(history);
+
+                    if (count == 0){
+                        channel.sendMessage(history).queue();
+                        count = 4;
+                        message = new StringBuilder();
+                        continue;
+                    }
+                        --count;
+                } while (resultSet.next());
+
+                if (count != 4) channel.sendMessage(message.toString()).queue();
                 statement.close();
             } catch (SQLException exception) {
                 exception.printStackTrace();

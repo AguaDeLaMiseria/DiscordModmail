@@ -1,5 +1,6 @@
 package com.aguadelamiseria.modmail.command.commands;
 
+import com.aguadelamiseria.modmail.Embeds;
 import com.aguadelamiseria.modmail.Modmail;
 import com.aguadelamiseria.modmail.command.Command;
 import com.aguadelamiseria.modmail.command.CommandResult;
@@ -42,14 +43,8 @@ public class AnonymousResponseCommand extends Command {
 
         PrivateChannel privateChannel = member.getUser().openPrivateChannel().complete();
 
-        EmbedBuilder embedOutside = new EmbedBuilder()
-                .setColor(Color.CYAN)
-                .setAuthor(modmail.getLang().get("modmail_identifier"), message.getJDA().getSelfUser().getAvatarUrl(), message.getJDA().getSelfUser().getAvatarUrl());
-
-        EmbedBuilder embedInside = new EmbedBuilder()
-                .setColor(Color.RED)
-                .setAuthor(message.getMember().getEffectiveName() + " " + modmail.getLang().get("id")+message.getMember().getId())
-                .setTitle(modmail.getLang().get("anonymous_response"));
+        EmbedBuilder embedOutside = Embeds.anonymousOut(modmail);
+        EmbedBuilder embedInside = Embeds.anonymousIn(modmail, message.getMember());
 
         if (args.length != 0) {
             embedOutside.addField(modmail.getLang().get("small_response"), String.join(" ", args), false);

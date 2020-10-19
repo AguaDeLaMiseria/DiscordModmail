@@ -1,5 +1,6 @@
 package com.aguadelamiseria.modmail.command.commands;
 
+import com.aguadelamiseria.modmail.Embeds;
 import com.aguadelamiseria.modmail.Modmail;
 import com.aguadelamiseria.modmail.command.Command;
 import com.aguadelamiseria.modmail.command.CommandResult;
@@ -42,19 +43,18 @@ public class ResponseCommand extends Command {
 
         PrivateChannel privateChannel = member.getUser().openPrivateChannel().complete();
 
-        EmbedBuilder embedOutside = new EmbedBuilder()
-                .setColor(Color.CYAN)
-                .setAuthor(message.getMember().getEffectiveName() + " (" + message.getMember().getRoles().get(0).getName() + ")", message.getAuthor().getAvatarUrl(), message.getAuthor().getAvatarUrl());
-
-        EmbedBuilder embedInside = new EmbedBuilder()
-                .setColor(Color.RED)
-                .setAuthor(message.getMember().getEffectiveName() + " " + modmail.getLang().get("id")+message.getMember().getId())
-                .setTitle(modmail.getLang().get("response"));
+        EmbedBuilder embedOutside = Embeds.responseOut(message.getMember());
+        EmbedBuilder embedInside = Embeds.responseIn(modmail, message.getMember());
 
         if (args.length != 0) {
-            embedOutside.addField(modmail.getLang().get("small_response"), String.join(" ", args), false);
-            embedInside.addField(modmail.getLang().get("small_response"), String.join(" ", args), false);
+            embedOutside.addField(
+                    modmail.getLang().get("small_response"),
+                    String.join(" ", args), false);
+            embedInside.addField(
+                    modmail.getLang().get("small_response"),
+                    String.join(" ", args), false);
         }
+
         if (!message.getAttachments().isEmpty()) {
             String url = (message.getAttachments().get(0)).getProxyUrl();
             embedOutside.setImage(url);

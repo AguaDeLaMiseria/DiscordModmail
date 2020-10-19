@@ -35,6 +35,7 @@ public class CommandManager extends ListenerAdapter {
 
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         Message message = event.getMessage();
+        if (message.getMember() == null) return;
         String rawMessage = message.getContentRaw();
         if (rawMessage.startsWith(this.modmail.getPrefix())) {
             String[] preArgs = rawMessage.split("\\s+");
